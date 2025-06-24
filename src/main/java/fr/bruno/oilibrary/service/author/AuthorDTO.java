@@ -1,4 +1,4 @@
-package fr.bruno.oilibrary.service.book;
+package fr.bruno.oilibrary.service.author;
 
 import fr.bruno.oilibrary.model.Author;
 
