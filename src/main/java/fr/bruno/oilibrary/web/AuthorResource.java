@@ -1,8 +1,8 @@
-package fr.bruno.oilibrary.rest;
+package fr.bruno.oilibrary.web;
 
-import org.springframework.web.bind.annotation.GetMapping;
 import fr.bruno.oilibrary.service.author.AuthorConfigService;
 import fr.bruno.oilibrary.service.author.AuthorDTO;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

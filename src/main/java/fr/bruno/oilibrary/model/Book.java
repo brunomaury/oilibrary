@@ -1,8 +1,9 @@
 package fr.bruno.oilibrary.model;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * Represents a book entity in the library management system.
@@ -10,14 +11,17 @@ import jakarta.persistence.ManyToOne;
  * @author Bruno Maury
  */
 @Entity
+// Never use "instance of" on Entities, use the visitor pattern
 public class Book extends BaseEntity {
-
+    @NotNull
     private String title;
 
+    @Min(1)
     private int pageCount;
 
-    @ManyToOne
-    @JoinColumn(name = "author_id")
+    @NotNull
+    @ManyToOne()
+    // By default, correspond db column is ..._id
     private Author author;
 
     public Author getAuthor() {

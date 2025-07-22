@@ -1,6 +1,7 @@
 package fr.bruno.oilibrary.model;
 
 import jakarta.persistence.Entity;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.Date;
 
@@ -12,8 +13,10 @@ import java.util.Date;
 @Entity
 public class Author extends BaseEntity {
 
-    private String firstName;
+    @NotNull
 
+    private String firstName;
+    @NotNull
     private String lastName;
 
     private Date birthday;

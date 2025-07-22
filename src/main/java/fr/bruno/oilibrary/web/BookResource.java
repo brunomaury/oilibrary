@@ -1,10 +1,10 @@
-package fr.bruno.oilibrary.rest;
+package fr.bruno.oilibrary.web;
 
+import fr.bruno.oilibrary.service.book.BookCommandDTO;
 import fr.bruno.oilibrary.service.book.BookConfigService;
 import fr.bruno.oilibrary.service.book.BookDTO;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,5 +27,12 @@ public class BookResource {
     @GetMapping
     public List<BookDTO> list() {
         return bookConfigService.list().stream().map(BookDTO::new).toList();
+    }
+
+    @PostMapping // post used to create, put to update
+    // Deserialisation by jackson to transform body in BookDTO, possible on records
+    public BookDTO create(@RequestBody @Validated BookCommandDTO bookCommandDTO) {
+        var book = bookConfigService.create(bookCommandDTO);
+        return new BookDTO(book);
     }
 }

@@ -6,7 +6,12 @@
                         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd">
 
     <changeSet id="001-insert-initial-books" author="system">
-        <comment>Insert initial book data</comment>
+
+        <insert tableName="author">
+            <column name="id" value="1"/>
+            <column name="first_name" value="John"/>
+            <column name="last_name" value="Doe"/>
+        </insert>
 
         <insert tableName="book">
             <column name="id" value="1"/>
@@ -18,15 +23,10 @@
         <insert tableName="book">
             <column name="id" value="2"/>
             <column name="title" value="To Kill a Mockingbird"/>
-            <column name="author_id" value="2"/>
+            <column name="author_id" value="1"/>
             <column name="page_count" value="281"/>
         </insert>
 
-        <rollback>
-            <delete tableName="books">
-                <where>id IN (1, 2)</where>
-            </delete>
-        </rollback>
     </changeSet>
 
 </databaseChangeLog>
