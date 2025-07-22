@@ -31,6 +31,14 @@ public class BookConfigService {
         this.authorRepository = authorRepository;
     }
 
+    public List<Book> list(String title) {
+        return bookRepository
+            .findByTitle(title)
+            .stream()
+            .sorted(Comparator.comparing(Book::getTitle))
+            .toList();
+    }
+
     public List<Book> list() {
         return bookRepository
             .findAll()

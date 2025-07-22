@@ -25,8 +25,14 @@ public class BookResource {
     }
 
     @GetMapping
-    public List<BookDTO> list() {
-        return bookConfigService.list().stream().map(BookDTO::new).toList();
+    public List<BookDTO> list(@RequestParam(required = false) String title) {
+        List<BookDTO> list;
+        if (title == null) {
+            list = bookConfigService.list().stream().map(BookDTO::new).toList();
+        } else
+            list = bookConfigService.list(title).stream().map(BookDTO::new).toList();
+
+        return list;
     }
 
     @PostMapping // post used to create, put to update
