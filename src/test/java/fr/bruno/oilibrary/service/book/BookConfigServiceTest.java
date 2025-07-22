@@ -20,9 +20,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-/*
+/**
  * Test class for class {@link BookConfigService}
  * This class uses Mockito to mock repositories in order to only test BookConfigService
+ *
  * @author Bruno Maury
  */
 @ExtendWith(MockitoExtension.class)

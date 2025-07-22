@@ -10,11 +10,12 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/*
+/**
  * Test class for interface {@link BookRepository}
  * This class uses Spring Boot Test to configure an isolated test environment
  * for the JPA persistence layer. It ensures that repository
  * operations interact correctly with the database.
+ *
  * @author Bruno Maury
  */
 class BookRepositoryTest extends BaseRepositoryTest {
