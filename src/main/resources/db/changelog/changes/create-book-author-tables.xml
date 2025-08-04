@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd">
 
-    <changeSet id="create-book_author-tables" author="Bruno Maury" context="dev,test">
+    <changeSet id="create-book_author-tables" author="Bruno Maury">
 
         <createTable tableName="author">
             <column name="id" type="VARCHAR(255)">
@@ -35,6 +35,25 @@
             </column>
             <column name="page_count" type="INTEGER"/>
         </createTable>
+    </changeSet>
+
+    <changeSet id="add-book-dtype" author="Bruno Maury">
+
+        <addColumn tableName="book">
+            <column name="dtype" type="VARCHAR" value="book"/>
+        </addColumn>
+        <sql>UPDATE book
+             SET dtype = 'book'</sql> <!--Same as above-->
+        <addNotNullConstraint tableName="book" columnName="dtype"/>
+
+    </changeSet>
+
+    <changeSet id="add-comic-color" author="Bruno Maury">
+
+        <addColumn tableName="book">
+            <column name="color" type="VARCHAR"/>
+        </addColumn>
+
     </changeSet>
 
 </databaseChangeLog>

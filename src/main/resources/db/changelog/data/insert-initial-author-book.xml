@@ -15,6 +15,7 @@
 
         <insert tableName="book">
             <column name="id" value="1"/>
+            <column name="dtype" value="book"/>
             <column name="title" value="The Great Gatsby"/>
             <column name="author_id" value="1"/>
             <column name="page_count" value="180"/>
@@ -22,6 +23,7 @@
 
         <insert tableName="book">
             <column name="id" value="2"/>
+            <column name="dtype" value="book"/>
             <column name="title" value="To Kill a Mockingbird"/>
             <column name="author_id" value="1"/>
             <column name="page_count" value="281"/>
