@@ -1,10 +1,11 @@
 package fr.bruno.oilibrary.service.book;
 
 import fr.bruno.oilibrary.model.Author;
+import fr.bruno.oilibrary.model.BaseBook;
 import fr.bruno.oilibrary.model.Book;
 import fr.bruno.oilibrary.repository.AuthorRepository;
 import fr.bruno.oilibrary.repository.BookRepository;
-import org.junit.jupiter.api.BeforeEach;
+import fr.bruno.oilibrary.repository.BookSearchCriteria;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -34,16 +35,16 @@ class BookConfigServiceTest {
     private AuthorRepository mockAuthorRepository;
     @InjectMocks
     private BookConfigService bookConfigService;
-    private Author author;
+    //    private Author author;
     @Captor
-    private ArgumentCaptor<Book> bookCaptor;
+    private ArgumentCaptor<BaseBook> bookCaptor;
 
-    @BeforeEach
+/*    @BeforeEach
     void setUp() {
         author = new Author();
         author.setId("1");
         when(mockAuthorRepository.findById(author.getId())).thenReturn(Optional.of(author));
-    }
+    }*/
 
     @Test
     void shouldList() {
@@ -51,12 +52,20 @@ class BookConfigServiceTest {
         bookA.setTitle("Book A");
         var bookB = new Book();
         bookB.setTitle("Book B");
-        when(mockBookRepository.findAll()).thenReturn(List.of(bookB, bookA));
-        assertThat(bookConfigService.list()).containsExactly(bookA, bookB);
+        var bookSearchCriteria = BookSearchCriteria
+            .builder()
+            .withTitle("Book")
+            .build();
+        when(mockBookRepository.findByCriteria(bookSearchCriteria)).thenReturn(List.of(bookB, bookA));
+        assertThat(bookConfigService.list(bookSearchCriteria)).containsExactly(bookA, bookB);
     }
 
     @Test
     void shouldCreate() {
+        var author = new Author();
+        author.setId("1");
+        when(mockAuthorRepository.findById(author.getId())).thenReturn(Optional.of(author));
+
         var bookCommandDTO = new BookCommandDTO("title", 1, "1");
         bookConfigService.create(bookCommandDTO);
         verify(mockBookRepository).save(bookCaptor.capture());

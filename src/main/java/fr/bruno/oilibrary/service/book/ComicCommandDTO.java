@@ -10,9 +10,10 @@ import jakarta.validation.constraints.NotNull;
  *
  * @author Bruno Maury
  */
-public record BookCommandDTO(
+public record ComicCommandDTO(
     @NotNull String title,
     @Min(1) int pageCount,
-    @NotNull String authorId
+    @NotNull String authorId,
+    String color
 ) implements BaseBookCommandDTO {
 }

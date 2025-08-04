@@ -1,8 +1,12 @@
 package fr.bruno.oilibrary.service.book;
 
+import fr.bruno.oilibrary.model.BaseBook;
 import fr.bruno.oilibrary.model.Book;
+import fr.bruno.oilibrary.model.BookVisitor;
+import fr.bruno.oilibrary.model.Comic;
 import fr.bruno.oilibrary.repository.AuthorRepository;
 import fr.bruno.oilibrary.repository.BookRepository;
+import fr.bruno.oilibrary.repository.BookSearchCriteria;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,31 +35,59 @@ public class BookConfigService {
         this.authorRepository = authorRepository;
     }
 
-    public List<Book> list(String title) {
+    public List<BaseBook> list(BookSearchCriteria criteria) {
         return bookRepository
-            .findByTitle(title)
+            .findByCriteria(criteria)
             .stream()
-            .sorted(Comparator.comparing(Book::getTitle))
+            .sorted(Comparator.comparing(BaseBook::getTitle))
             .toList();
     }
 
-    public List<Book> list() {
-        return bookRepository
-            .findAll()
-            .stream()
-            .sorted(Comparator.comparing(Book::getTitle))
-            .toList();
+    public BaseBook findById(String id) {
+        return bookRepository.findById(id).orElseThrow();
     }
 
-    public Book create(BookCommandDTO bookCommandDTO) {
-        Book book = new Book();
-        book.setTitle(bookCommandDTO.title());
-        book.setPageCount(bookCommandDTO.pageCount());
-        book.setAuthor(
+    public BaseBook create(BaseBookCommandDTO bookCommandDTO) {
+        BaseBook book = switch (bookCommandDTO) {
+            case BookCommandDTO commandDTO -> new Book();
+            case ComicCommandDTO commandDTO -> new Comic();
+        };
+
+        copyCommandToBook(bookCommandDTO, book);
+        bookRepository.save(book);
+        return book;
+    }
+
+    public void update(String bookId, BaseBookCommandDTO bookCommandDTO) {
+        var book = findById(bookId);
+        copyCommandToBook(bookCommandDTO, book);
+    }
+
+    public void copyCommandToBook(BaseBookCommandDTO baseBookCommandDTO, BaseBook baseBook) {
+
+        baseBook.accept(new BookVisitor<Void>() {
+            public Void visitBook(Book book) {
+                if (!(baseBookCommandDTO instanceof BookCommandDTO)) {
+                    throw new IllegalStateException();
+                }
+                return null;
+            }
+
+            public Void visitComic(Comic comic) {
+                if (!(baseBookCommandDTO instanceof ComicCommandDTO comicCommandDTO)) {
+                    throw new IllegalStateException();
+                }
+                comic.setColor(comicCommandDTO.color());
+                return null;
+            }
+        });
+
+        baseBook.setTitle(baseBookCommandDTO.title());
+        baseBook.setPageCount(baseBookCommandDTO.pageCount());
+        baseBook.setAuthor(
             authorRepository
-                .findById(bookCommandDTO.authorId())
+                .findById(baseBookCommandDTO.authorId())
                 .orElseThrow(RuntimeException::new)
         );
-        return bookRepository.save(book);
     }
 }

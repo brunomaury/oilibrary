@@ -1,20 +1,23 @@
 package fr.bruno.oilibrary.web;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.bruno.oilibrary.model.BaseBook;
 import fr.bruno.oilibrary.model.Book;
+import fr.bruno.oilibrary.repository.BookSearchCriteria;
+import fr.bruno.oilibrary.service.book.BookCommandDTO;
 import fr.bruno.oilibrary.service.book.BookConfigService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.everyItem;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -27,31 +30,49 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @WebMvcTest(BookResource.class)
 public class BookResourceTest {
-    // @Autowired private WebTestClient webTestClient;
-
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @MockitoBean
     private BookConfigService mockBookConfigService;
 
-    List<Book> books;
+    @Test
+    void shouldReturnBooks() throws Exception {
+        BaseBook bookA = new Book();
+        bookA.setTitle("Title");
+        bookA.setPageCount(2);
+        when(mockBookConfigService.list(
+            BookSearchCriteria.builder()
+                .withTitle("Title")
+                .build()))
+            .thenReturn(List.of(bookA));
 
-    @BeforeEach
-    void setUp() {
-        Book book = new Book();
-        book.setTitle("Title");
-        books = List.of(book);
-        when(mockBookConfigService.list()).thenReturn(books);
+        mockMvc.perform(get("/api/books")
+                .param("title", "Title"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$[0].title").value(bookA.getTitle()))
+            .andExpect(jsonPath("$[0].pageCount").value(bookA.getPageCount()));
     }
 
     @Test
-    void shouldReturnBooks() throws Exception {
-        mockMvc.perform(get("/api/books")
-                .param("title", "title"))
+    void shouldCreateBooks() throws Exception {
+        BaseBook book = new Book();
+        book.setTitle("Title");
+        book.setPageCount(1);
+
+        // Any commandDTO works since we mock the service.create
+        var bookCommandDTO = new BookCommandDTO("toto", 1, "1");
+
+        when(mockBookConfigService.create(bookCommandDTO))
+            .thenReturn(book);
+
+        mockMvc.perform(post("/api/books")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(bookCommandDTO)))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$[*].title", everyItem(equalTo("Title"))));
-
+            .andExpect(jsonPath("$.title").value(book.getTitle()));
     }
-
 }

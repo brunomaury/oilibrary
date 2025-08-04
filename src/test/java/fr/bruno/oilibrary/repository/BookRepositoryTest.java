@@ -1,6 +1,7 @@
 package fr.bruno.oilibrary.repository;
 
 import fr.bruno.oilibrary.model.Author;
+import fr.bruno.oilibrary.model.BaseBook;
 import fr.bruno.oilibrary.model.Book;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,26 +25,36 @@ class BookRepositoryTest extends BaseRepositoryTest {
     @Autowired
     private AuthorRepository authorRepository;
 
+    private BaseBook bookA;
+
     @BeforeEach
     void setUp() {
-        Author author = new Author();
+        var author = new Author();
         author.setFirstName("John");
         author.setLastName("Doe");
         authorRepository.save(author);
 
-        Book book = new Book();
-        book.setTitle("Title");
-        book.setPageCount(100);
-        book.setAuthor(author);
-        bookRepository.save(book);
+        bookA = new Book();
+        bookA.setTitle("Title");
+        bookA.setPageCount(100);
+        bookA.setAuthor(author);
+        var bookB = new Book();
+        bookB.setTitle("toto");
+        bookB.setPageCount(100);
+        bookB.setAuthor(author);
+        bookRepository.saveAll(List.of(bookA, bookB));
     }
 
     @Test
     void shouldFindBookByTitle() {
         var title = "Title";
-        List<Book> list = bookRepository.findByTitle(title);
-        // TODO : Why this warning ?
-        assertThat(list.stream().allMatch(book -> book.getTitle().contains(title)));
+        var list = bookRepository.findByCriteria(
+            BookSearchCriteria
+                .builder()
+                .withTitle(title)
+                .build()
+        );
+        assertThat(list).containsExactly(bookA);
     }
 }
 
