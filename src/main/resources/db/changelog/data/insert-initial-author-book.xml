@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd">
+
+    <changeSet id="001-insert-initial-books" author="system" context="dev">
+
+        <insert tableName="author">
+            <column name="id" value="1"/>
+            <column name="first_name" value="John"/>
+            <column name="last_name" value="Doe"/>
+        </insert>
+
+        <insert tableName="book">
+            <column name="id" value="1"/>
+            <column name="dtype" value="book"/>
+            <column name="title" value="The Great Gatsby"/>
+            <column name="author_id" value="1"/>
+            <column name="page_count" value="180"/>
+        </insert>
+
+        <insert tableName="book">
+            <column name="id" value="2"/>
+            <column name="dtype" value="book"/>
+            <column name="title" value="To Kill a Mockingbird"/>
+            <column name="author_id" value="1"/>
+            <column name="page_count" value="281"/>
+        </insert>
+
+    </changeSet>
+
+</databaseChangeLog>
