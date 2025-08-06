@@ -47,23 +47,28 @@ public class BookConfigService {
         return bookRepository.findById(id).orElseThrow();
     }
 
-    public BaseBook create(BaseBookCommandDTO bookCommandDTO) {
-        BaseBook book = switch (bookCommandDTO) {
+    public BaseBook create(BaseBookCommandDTO baseBookCommandDTO) {
+        BaseBook baseBook = switch (baseBookCommandDTO) {
             case BookCommandDTO commandDTO -> new Book();
             case ComicCommandDTO commandDTO -> new Comic();
         };
 
-        copyCommandToBook(bookCommandDTO, book);
-        bookRepository.save(book);
-        return book;
+        copyCommandToBaseBook(baseBookCommandDTO, baseBook);
+        bookRepository.save(baseBook);
+        return baseBook;
     }
 
     public void update(String bookId, BaseBookCommandDTO bookCommandDTO) {
         var book = findById(bookId);
-        copyCommandToBook(bookCommandDTO, book);
+        copyCommandToBaseBook(bookCommandDTO, book);
     }
 
-    public void copyCommandToBook(BaseBookCommandDTO baseBookCommandDTO, BaseBook baseBook) {
+    public void delete(String bookId) {
+        var book = findById(bookId);
+        bookRepository.delete(book);
+    }
+
+    public void copyCommandToBaseBook(BaseBookCommandDTO baseBookCommandDTO, BaseBook baseBook) {
 
         baseBook.accept(new BookVisitor<Void>() {
             public Void visitBook(Book book) {

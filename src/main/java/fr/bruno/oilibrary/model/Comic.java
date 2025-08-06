@@ -24,6 +24,11 @@ public class Comic extends BaseBook {
     }
 
     @Override
+    public BaseBookType getBaseBookType() {
+        return BaseBookType.COMIC;
+    }
+
+    @Override
     public <T> T accept(BookVisitor<T> visitor) {
         return visitor.visitComic(this);
     }

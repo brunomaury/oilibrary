@@ -14,6 +14,11 @@ public class Book extends BaseBook {
     public static final String TYPE = "book";
 
     @Override
+    public BaseBookType getBaseBookType() {
+        return BaseBookType.BOOK;
+    }
+
+    @Override
     public <T> T accept(BookVisitor<T> visitor) {
         return visitor.visitBook(this);
     }

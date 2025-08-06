@@ -1,5 +1,7 @@
 package fr.bruno.oilibrary.repository;
 
+import fr.bruno.oilibrary.model.BaseBookType;
+
 /**
  * Immutable data carrier record representing search criteria for BaseBook entities.
  *
@@ -13,9 +15,9 @@ package fr.bruno.oilibrary.repository;
  *
  * @author Bruno Maury
  */
-public record BookSearchCriteria(String title, String authorId) {
+public record BookSearchCriteria(String title, String authorId, BaseBookType type) {
     public BookSearchCriteria(Builder builder) {
-        this(builder.title, builder.authorId);
+        this(builder.title, builder.authorId, builder.type);
     }
 
     public static Builder builder() {
@@ -25,6 +27,8 @@ public record BookSearchCriteria(String title, String authorId) {
     public static class Builder {
         private String title;
         private String authorId;
+        private BaseBookType type;
+
 
         public Builder withTitle(String title) {
             this.title = title;
@@ -33,6 +37,11 @@ public record BookSearchCriteria(String title, String authorId) {
 
         public Builder withAuthorId(String authorId) {
             this.authorId = authorId;
+            return this;
+        }
+
+        public Builder withType(BaseBookType type) {
+            this.type = type;
             return this;
         }
 

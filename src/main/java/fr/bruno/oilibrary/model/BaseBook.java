@@ -51,6 +51,8 @@ public abstract class BaseBook extends BaseEntity {
         this.pageCount = pageCount;
     }
 
+    public abstract BaseBookType getBaseBookType();
+
     public abstract <T> T accept(BookVisitor<T> visitor);
 
 }

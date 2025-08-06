@@ -39,15 +39,8 @@ class BookConfigServiceTest {
     @Captor
     private ArgumentCaptor<BaseBook> bookCaptor;
 
-/*    @BeforeEach
-    void setUp() {
-        author = new Author();
-        author.setId("1");
-        when(mockAuthorRepository.findById(author.getId())).thenReturn(Optional.of(author));
-    }*/
-
     @Test
-    void shouldList() {
+    void shouldFindByTitle() {
         var bookA = new Book();
         bookA.setTitle("Book A");
         var bookB = new Book();
@@ -57,6 +50,7 @@ class BookConfigServiceTest {
             .withTitle("Book")
             .build();
         when(mockBookRepository.findByCriteria(bookSearchCriteria)).thenReturn(List.of(bookB, bookA));
+
         assertThat(bookConfigService.list(bookSearchCriteria)).containsExactly(bookA, bookB);
     }
 

@@ -1,6 +1,6 @@
 package fr.bruno.oilibrary.service.book;
 
-import fr.bruno.oilibrary.model.BaseBook;
+import fr.bruno.oilibrary.model.Book;
 
 /**
  * Data Transfer Object (DTO) for Book entities.
@@ -9,8 +9,8 @@ import fr.bruno.oilibrary.model.BaseBook;
  *
  * @author Bruno Maury
  */
-public record BookDTO(String id, String title, int pageCount) {
-    public BookDTO(BaseBook book) {
+public record BookDTO(String id, String title, int pageCount) implements BaseBookDTO {
+    public BookDTO(Book book) {
 
         this(
             book.getId(),

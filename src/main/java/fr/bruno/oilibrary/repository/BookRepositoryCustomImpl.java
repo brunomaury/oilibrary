@@ -43,7 +43,11 @@ public class BookRepositoryCustomImpl extends BaseCustomRepository<BaseBook, Str
             }
 
             if (hasText(criteria.authorId())) {
-                predicates.add(cb.equal(root.get("authorId"), criteria.authorId()));
+                predicates.add(cb.equal(root.get("author").get("id"), criteria.authorId()));
+            }
+
+            if (criteria.type() != null) {
+                predicates.add(cb.equal(root.type(), criteria.type().getEntityClass()));
             }
 
             return cb.and(predicates.toArray(new Predicate[0]));

@@ -18,8 +18,7 @@ import java.util.List;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Test class for class {@link BookResource}
@@ -73,6 +72,20 @@ public class BookResourceTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(bookCommandDTO)))
             .andExpect(status().isOk())
+            .andExpect(jsonPath("$.title").value(book.getTitle()));
+    }
+
+    @Test
+    void shouldFindBook() throws Exception {
+        BaseBook book = new Book();
+        book.setTitle("Title");
+        book.setPageCount(2);
+        when(mockBookConfigService.findById("1"))
+            .thenReturn(book);
+
+        mockMvc.perform(get("/api/books/1"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.title").value(book.getTitle()));
     }
 }
